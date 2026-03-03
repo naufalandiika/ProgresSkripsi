@@ -22,7 +22,13 @@ body{
 
 h1{
   text-align:center;
+  margin-bottom:15px;
+}
+
+.info-box{
   margin-bottom:20px;
+  font-size:15px;
+  line-height:1.6;
 }
 
 .summary{
@@ -30,7 +36,7 @@ h1{
   color:#333;
   padding:20px;
   border-radius:20px;
-  margin-bottom:20px;
+  margin-bottom:25px;
 }
 
 .progress-container{
@@ -74,7 +80,7 @@ h1{
   background:#f4f6f9;
   padding:10px;
   border-radius:10px;
-  max-height:200px;
+  max-height:220px;
   overflow-y:auto;
   margin-top:10px;
 }
@@ -90,13 +96,11 @@ h1{
 
 .dosen{
   background:#e3f2fd;
-  text-align:left;
 }
 
 .mahasiswa{
   background:#c8e6c9;
   float:right;
-  clear:both;
 }
 
 textarea{
@@ -127,6 +131,11 @@ button.mhs{
 
 <h1>Dashboard Monitoring Skripsi</h1>
 
+<div class="info-box">
+  <p><strong>Dosen Pembimbing:</strong> Bapak Suprayitno, S.ST., Ak., M.T.</p>
+  <p><strong>Mahasiswa:</strong> Naufal Andika Syarif Udi</p>
+</div>
+
 <div class="summary">
   <h2>Progress Keseluruhan</h2>
   <div class="progress-container">
@@ -138,7 +147,7 @@ button.mhs{
 
 <script>
 
-const API_URL = "https://script.google.com/macros/s/AKfycbz_pAsnHt8iu-RFv7WQYy_Hh9TeNPYdIqw2oWHtpK15gO82QNC7VRL2IVXaNQhfLGrfww/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbyCWZFZtmY7b_iGYpvlx7QdJ7Rzp2BKX2fXmPtiE5oKGqMy5CzIlxu8llg-4_k49vb4Ag/exec";
 
 async function loadData(){
 
@@ -151,8 +160,11 @@ async function loadData(){
 
   for(let i=1;i<data.length;i++){
 
+    let rowNumber = i+1;
+
     let tahap=data[i][0];
     let status=data[i][1];
+    let catatanMahasiswa=data[i][2] || "-";
     let chat=data[i][3] || "";
     let persen=parseInt(data[i][5]) || 0;
 
@@ -183,14 +195,26 @@ async function loadData(){
         <div class="progress-bar" style="width:${persen}%">${persen}%</div>
       </div>
 
+      <p style="margin-top:15px;">
+        <b>Catatan Mahasiswa:</b><br>
+        ${catatanMahasiswa}
+      </p>
+
+      <p style="margin-top:15px;"><b>Riwayat Diskusi:</b></p>
+
       <div class="chat-box">
         ${chatHTML || "Belum ada diskusi"}
       </div>
 
       <textarea id="chat_${i}" rows="2" placeholder="Tulis pesan..."></textarea>
 
-      <button onclick="sendChat(${i+1},${i},'DOSEN')">Kirim sebagai Dosen</button>
-      <button class="mhs" onclick="sendChat(${i+1},${i},'Naufal')">Kirim sebagai Mahasiswa</button>
+      <button onclick="sendChat(${rowNumber},${i},'DOSEN')">
+        Kirim sebagai Dosen
+      </button>
+
+      <button class="mhs" onclick="sendChat(${rowNumber},${i},'MAHASISWA')">
+        Kirim sebagai Mahasiswa
+      </button>
     </div>
     `;
   }
